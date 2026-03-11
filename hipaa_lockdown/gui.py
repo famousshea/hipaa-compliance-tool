@@ -163,8 +163,9 @@ class HIPAAAppWindow(Gtk.ApplicationWindow):
         self.populate_modules()
 
     def populate_modules(self):
-        for row in self.list_box.get_child_at_index(-1) or []:
-             self.list_box.remove(row)
+        # Clear existing rows
+        while (row := self.list_box.get_row_at_index(0)) is not None:
+            self.list_box.remove(row)
              
         for name, module in MODULES.items():
             row_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
@@ -252,7 +253,10 @@ class HIPAAAppWindow(Gtk.ApplicationWindow):
 
 class HIPAAApplication(Adw.Application):
     def __init__(self):
-        super().__init__(application_id='com.example.HIPAALockdown')
+        super().__init__(
+            application_id='com.famousshea.hipaa.lockdown',
+            flags=gi.repository.Gio.ApplicationFlags.NON_UNIQUE
+        )
         self.connect('activate', self.on_activate)
 
     def on_activate(self, app):
